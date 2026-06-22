@@ -1,4 +1,5 @@
 import os
+import sys
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -10,11 +11,10 @@ from passlib.context import CryptContext
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-load_dotenv()
+if not getattr(sys, "frozen", False):
+    load_dotenv()
 
-SECRET_KEY = os.getenv("JWT_SECRET")
-if not SECRET_KEY:
-    raise RuntimeError("JWT_SECRET no está configurado en el archivo .env")
+SECRET_KEY = os.getenv("JWT_SECRET") or "tienda_super_secreto_2024"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 12
 

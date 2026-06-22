@@ -45,7 +45,7 @@ class PagoCreate(BaseModel):
     monto: float
     referencia: Optional[str] = None
 
-@router.get("/")
+@router.get("")
 def listar(buscar: Optional[str] = None, db: Session = Depends(get_db), _=Depends(get_usuario_actual)):
     q = db.query(Cliente).filter(Cliente.activo == True)
     if buscar:
@@ -66,7 +66,7 @@ def historial(id: int, db: Session = Depends(get_db), _=Depends(get_usuario_actu
                .order_by(Venta.fecha.desc()).limit(20).all()
     return ventas
 
-@router.post("/")
+@router.post("")
 def crear(datos: ClienteCreate, db: Session = Depends(get_db), _=Depends(get_usuario_actual)):
     c = Cliente(**datos.dict())
     db.add(c)

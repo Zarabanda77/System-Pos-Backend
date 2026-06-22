@@ -38,7 +38,7 @@ class TransferenciaCreate(BaseModel):
     cantidad: float
 
 # Listar bodegas
-@router.get("/")
+@router.get("")
 def listar_bodegas(db: Session = Depends(get_db), _=Depends(get_usuario_actual)):
     return db.query(Bodega).filter(Bodega.activo == True).all()
 

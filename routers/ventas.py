@@ -4,6 +4,7 @@ from database import get_db
 from models import Venta, DetalleVenta, Producto
 from pydantic import BaseModel
 from typing import Optional, List
+from datetime import datetime
 from routers.auth import get_usuario_actual
 
 router = APIRouter()
@@ -28,7 +29,7 @@ class VentaCreate(BaseModel):
     telefono_cliente: Optional[str] = None
     detalles: List[DetalleVentaCreate]
 
-@router.post("/")
+@router.post("")
 def crear_venta(datos: VentaCreate, db: Session = Depends(get_db), _=Depends(get_usuario_actual)):
     from routers.clientes import Cliente, PagoVenta
     venta = Venta(
@@ -72,9 +73,55 @@ def crear_venta(datos: VentaCreate, db: Session = Depends(get_db), _=Depends(get
     db.refresh(venta)
     return venta
 
-@router.get("/")
+@router.get("")
 def listar_ventas(db: Session = Depends(get_db), _=Depends(get_usuario_actual)):
     return db.query(Venta).order_by(Venta.fecha.desc()).limit(100).all()
+
+@router.get("/dia/lista")
+def ventas_del_dia(fecha: Optional[str] = None, db: Session = Depends(get_db), _=Depends(get_usuario_actual)):
+    """Ventas de un día. Sin 'fecha' devuelve las de HOY; con 'fecha' (YYYY-MM-DD) las de ese día."""
+    dia = datetime.now()
+    if fecha:
+        try:
+            dia = datetime.strptime(fecha, "%Y-%m-%d")
+        except ValueError:
+            dia = datetime.now()
+    inicio = dia.replace(hour=0, minute=0, second=0, microsecond=0)
+    fin = dia.replace(hour=23, minute=59, second=59, microsecond=999999)
+    ventas = db.query(Venta).filter(
+        Venta.fecha >= inicio,
+        Venta.fecha <= fin,
+        Venta.estado == "completada"
+    ).order_by(Venta.fecha.desc()).all()
+
+    lista = []
+    total_dia = 0
+    total_productos = 0
+    for v in ventas:
+        detalles = [{
+            "nombre_producto": d.nombre_producto,
+            "cantidad": d.cantidad,
+            "precio_unitario": d.precio_unitario,
+            "subtotal": d.subtotal,
+        } for d in v.detalles]
+        total_dia += v.total or 0
+        total_productos += sum(d.cantidad for d in v.detalles)
+        lista.append({
+            "id": v.id,
+            "fecha": v.fecha.isoformat() if v.fecha else None,
+            "total": v.total,
+            "metodo_pago": v.metodo_pago,
+            "nombre_cliente": v.nombre_cliente,
+            "detalles": detalles,
+        })
+
+    return {
+        "fecha": str(dia.date()),
+        "cantidad_ventas": len(ventas),
+        "total": total_dia,
+        "total_productos": total_productos,
+        "ventas": lista,
+    }
 
 @router.get("/{id}")
 def obtener_venta(id: int, db: Session = Depends(get_db), _=Depends(get_usuario_actual)):

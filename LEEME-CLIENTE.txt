@@ -1,0 +1,37 @@
+========================================
+   SISTEMA TIENDA - Instrucciones
+========================================
+
+COMO ABRIR EL PROGRAMA
+----------------------
+1. Haz doble clic en el archivo "Tienda.exe".
+2. Se abrira una ventana negra (no la cierres mientras uses el programa).
+3. Automaticamente se abrira tu navegador con el sistema.
+   Si no se abre solo, entra a:  http://localhost:8000
+
+INGRESO (primera vez)
+---------------------
+   Usuario:    admin@tienda.com
+   Contrasena: admin123
+
+   >> Cambia la contrasena despues de entrar.
+
+COMO CERRAR EL PROGRAMA
+-----------------------
+Cierra la ventana negra. Eso apaga el sistema.
+
+IMPORTANTE - TUS DATOS
+----------------------
+- Toda la informacion (productos, ventas, clientes) se guarda en el
+  archivo "tienda.db" que esta junto a "Tienda.exe".
+- HAZ COPIAS DE SEGURIDAD de ese archivo "tienda.db" cada cierto tiempo
+  (copialo a una USB o a otra carpeta). Si lo pierdes, pierdes los datos.
+- No borres ni muevas "tienda.db" mientras usas el programa.
+
+NOTAS
+-----
+- El programa funciona sin internet, todo es local en esta PC.
+- La balanza (bascula) es opcional; si no esta conectada, el sistema
+  igual funciona normal.
+
+Ante cualquier problema, contacta a tu proveedor del sistema.

@@ -9,3 +9,10 @@ __pycache__/
 venv/
 env/
 .venv/
+
+# Artefactos de empaquetado (PyInstaller / frontend compilado)
+build/
+dist/
+frontend/
+*.spec
+build.log
