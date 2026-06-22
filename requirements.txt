@@ -7,3 +7,6 @@ python-jose[cryptography]==3.3.0
 python-multipart==0.0.12
 python-dotenv==1.0.1
 pydantic==2.9.2
+
+# Solo para empaquetar el ejecutable con compilar.bat (no se usa al correr en desarrollo)
+pyinstaller==6.20.0
